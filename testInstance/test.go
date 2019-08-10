@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
 //用于测试标准库的包和函数的
@@ -38,5 +39,9 @@ func main() {
 	//	count++
 	//}
 	//fmt.Println(count)
+	ts := fmt.Sprintf("%x", time.Now().Unix())
+	fmt.Println(ts[:8])
+
+	fmt.Println(time.Now().Unix())
 
 }

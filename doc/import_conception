@@ -10,3 +10,4 @@
 2)group by a,b,c = 先按照a字段分组,然后再各个a字段组中再分组b字段, c同理。
 3)group by a having a == 'xxx' ,having用于组级过滤，过滤都是按数据组为单位的,where是行级过滤,过滤单位是按数据行来继续过滤的。
 4)truncate table_name , 可以迅速清空表 【truncate是截断、删除的意思】
+5)collate关键字，作用为数据表的校对规则，指定数据集如何排序

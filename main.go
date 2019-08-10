@@ -24,5 +24,8 @@ func main(){
 	http.HandleFunc("/user/signup", handler.UserSignUpHandler)
 	http.HandleFunc("/user/signin", handler.UserLoginInHandler)
 
+	//设置静态资源访问，把./static映射为/static/
+	http.Handle("/static/",http.StripPrefix("/static/",http.FileServer(http.Dir("./static"))))
+
 	log.Fatal(http.ListenAndServe(":8080", nil)) //让webserver监听8000端口，还没有中间件程序
 }

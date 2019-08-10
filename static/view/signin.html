@@ -64,6 +64,7 @@
 </body>
 
 <script lang="javascript">
+  var ip = "localhost:8080"
   function onSignin() {
     var username = document.getElementById('username');
     var password = document.getElementById('password');
@@ -86,7 +87,8 @@
         // localStorage.setItem("downloadEntry", body.data.DownloadEntry);
         // window.location.href = body.data.Location;
         if (body == "success") {
-          alert("登录验证通过，登录成功！");
+          //alert("登录验证通过，登录成功！");
+          window.location.href = "http://" + ip + "/user/homePage"
         }else{
           alert("登录失败！");
         }

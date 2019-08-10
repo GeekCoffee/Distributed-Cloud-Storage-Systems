@@ -53,3 +53,23 @@ func UserLoginInFromDB(username, password string) bool {
 	}
 
 }
+
+
+//UpdateUserToken: 刷新用户登录的token，同一个用户新旧token可覆盖replace
+func UpdateUserToken(username , token string) bool {
+	stmtReplace, err := MyDB.DBConn().Prepare("replace into tbl_user_token (`user_name`, `user_token`) values (?,?);")
+	if err != nil{
+		fmt.Println("prepare is error: " + err.Error())
+		return false
+	}
+	defer stmtReplace.Close()
+
+	_, err = stmtReplace.Exec(username, token)
+	if err != nil {
+		fmt.Println("stmt.Exec is error: " + err.Error())
+		return false
+	}
+
+	return true
+}
+
