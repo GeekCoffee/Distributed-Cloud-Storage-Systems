@@ -1,0 +1,93 @@
+//mysql版本 5.7.15
+//密码： MYSQL_ROOT_PASSWORD=my-secret-pw
+
+//登录主从节点的mysql
+mysql -uroot -hHostIp -p123456 -P13306
+mysql -uroot -hHostIp -p123456 -P13307
+
+//查看变量log_bin的信息，即log_bin日志是否开启
+show variables like '%log_bin%'
+
+//打开log_bin
+在mysql配置文件/etc/my.cnf中， 添加“log-bin=mysql-bin”
+然后，重启mysql服务 = stop mysqld, start mysqld
+
+//查询master和slave的状态
+show master status\G
+show slave status\G
+
+//关闭slave节点，而在master节点中赋权slave节点
+grant replication slave on *.* to 'user_name'@'slave_ip' identified by 'password';
+
+
+//配置slave节点的日志读取目标
+change master to master_host='172.17.0.2',master_user='slave3',
+master_password='slave3',master_log_file='log.000003',
+master_log_pos=0;  
+#置为0，说明是日志的开头开始读取
+
+//启动slave模式
+start slave
+
+//查看slave节点的状态
+show slave status\G;
+==> Slave_IO_Running:Yes 和 Slave_SQL_Running:Yes， 这两个线程启动了就可以了
+==>IO线程，用于从master节点的binlog日志文件中读取数据，并写入relay_log文件中
+==>SQL线程，用于从relay_log日志文件中读取数据，并写入当前Slave节点的DB中去，从而达到同步master节点的效果
+
+//然后可以在master节点上进行相应的业务操作了
+写一些业务SQL等
+
+//创建一个DB
+create database fileserver default character set utf8;
+
+//tbl_file文件元信息表
+create table `tbl_filemeta` (
+`id` int(11) not null auto_increment comment 'tbl_file表的id',
+`file_sha1` char(40) not null default '' comment '文件内容通过SHA1算法，得到的hash值',
+`file_name` varchar(256) not null default '' comment '文件名',
+`file_path` varchar(1024) not null default '' comment '文件路径+文件名',
+`create_at` datetime default NOW() comment '文件被创建的时间',
+`update_at` datetime default NOW() on update current_timestamp() comment '文件每次被修改的时间',
+`status` int(11) not null default 0 comment '文件的状态(可用-0, 禁用-1, 被删除-2)',
+`file_size` bigint(20) default 0 comment '文件大小',
+`ext1` int(11) default 0 comment '备用字段1',
+`ext2` text comment '备用字段2',
+primary key(`id`),
+unique key `idx_file_hash` (`file_sha1`),
+key `idx_status` (`status`)
+) ENGINE=InnoDB default charset=utf8;
+
+
+//tbl_user用户信息表，使用default的值而不是NULL
+create table `tbl_user`(
+`id` int(11) not null auto_increment,
+`user_name` varchar(64) not null default '' comment '用户名',
+`user_pwd` varchar(256) not null default '' comment '用户密码',
+`email` varchar(64) default '' comment '邮箱，用户名也可以是邮箱',
+`phone` varchar(128) default '' comment '手机号',
+`email_validated` tinyint(1) default 0 comment '邮箱是否被验证过',
+`phone_validated` tinyint(1) default 0 comment '手机号是否被验证过',
+`signup_at` datetime default current_timestamp comment '注册日期, signup-注册、签约; login-登录',
+`last_active` datetime default current_timestamp on update current_timestamp comment '最后活跃时间',
+`profile` text comment '用户属性',
+`status` int(11) not null default 0 comment '用户状态(可用|禁用|锁定|删除标记等)',
+primary key(`id`),
+unique key `idx_phone` (`phone`),
+unique key `idx_email` (`email`),
+key `idx_status` (`status`)
+)engine=InnoDB auto_increment=5 default charset=utf8mb4;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
