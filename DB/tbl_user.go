@@ -73,3 +73,45 @@ func UpdateUserToken(username , token string) bool {
 	return true
 }
 
+
+//GetUserInfo: 用于获取用户信息
+func GetUserInfo(username string)(*User, error){
+	user := &User{}
+
+	stmtQuery, err := MyDB.DBConn().Prepare("SELECT user_name, signup_at FROM tbl_user WHERE user_name = ? LIMIT 1;")
+	if err != nil{
+		fmt.Println(err.Error())
+		return user, err
+	}
+	defer stmtQuery.Close()
+
+	//从结果集中把数据存入变量的内存地址中
+	err = stmtQuery.QueryRow(username).Scan(&user.Username, &user.SignupAt)
+	if err != nil{
+		fmt.Println(err.Error())
+		return user, err
+	}
+
+	return user, nil
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

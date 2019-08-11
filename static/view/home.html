@@ -79,8 +79,8 @@
       },
       success: function (body) {
         var resp = body;
-        if (typeof (resp) == 'string') {
-          resp = JSON.parse(body);
+        if (typeof (resp) == 'string') { //若传回来的json是字符串，就要解析为json对象
+          resp = JSON.parse(body);  //把json字符串解析为json对象
         }
         if (resp.code == 10005) {
           window.location.href = "/static/view/signin.html";
@@ -94,7 +94,7 @@
 
   function updateFileList() {
     $.ajax({
-      url: "/file/query?" + queryParams(),
+      url: "/user/file/meta/query?" + queryParams(),
       type: "POST",
       data: {
         limit: 15
@@ -103,45 +103,49 @@
         alert(JSON.stringify(err));
       },
       success: function (body) {
+
+        var data = $.parseJSON(body)  //console.info()输出字符串和json对象是不同的，json对象是有颜色的
+
         if (!body) {
           return;
         }
-        var data = body;
         if (!data || data.length <= 0) {
+          alert(-111)
           return;
         }
 
-        var dlHost = 'http://localhost:8080';
-        var dlEntry = localStorage.getItem('downloadEntry');
-        if (dlEntry != '') {
-          if (dlEntry.indexOf('http:')<0) {
-            dlHost = 'http://' + dlEntry;
-          } else {
-            dlHost = dlEntry;
-          }
-        }
-        
-        var downloadHtml = '<button class="btn btn-info" ' +
-          'style="height:30px;margin:5px 3px;"' +
-          'onClick = "downloadFile(\'' + dlHost + '/file/downloadurl?filehash={0}&{1}\')">下载</button>';
-        var renameFileHtml = '<button class="btn btn-warning" ' +
-          'style="height:30px;margin:5px 3px;"' +
-          'onClick = "renameFile(\'{0}\',\'{1}\',\'http://apigw.fileserver.com/file/' +
-          'update?op=0&filehash={2}&{3}\')">重命名</button>';
-        var cdlFileHtml = '<button class="btn btn-info" ' +
-          'style="height:30px;margin:5px 3px;"' +
-          'onClick = "cdlFile(\'' + dlHost + '/file/download?filehash={0}&{1}\')">断点下载(火狐)</button>';
+        // var dlHost = 'http://localhost:8080';
+        // var dlEntry = localStorage.getItem('downloadEntry');
+        // if (dlEntry != '') {
+        //   if (dlEntry.indexOf('http:')<0) {
+        //     dlHost = 'http://' + dlEntry;
+        //   } else {
+        //     dlHost = dlEntry;
+        //   }
+        // }
+        //
+        // var downloadHtml = '<button class="btn btn-info" ' +
+        //   'style="height:30px;margin:5px 3px;"' +
+        //   'onClick = "downloadFile(\'' + dlHost + '/file/downloadurl?filehash={0}&{1}\')">下载</button>';
+        // var renameFileHtml = '<button class="btn btn-warning" ' +
+        //   'style="height:30px;margin:5px 3px;"' +
+        //   'onClick = "renameFile(\'{0}\',\'{1}\',\'http://apigw.fileserver.com/file/' +
+        //   'update?op=0&filehash={2}&{3}\')">重命名</button>';
+        // var cdlFileHtml = '<button class="btn btn-info" ' +
+        //   'style="height:30px;margin:5px 3px;"' +
+        //   'onClick = "cdlFile(\'' + dlHost + '/file/download?filehash={0}&{1}\')">断点下载(火狐)</button>';
 
         for (var i = 0; i < data.length; i++) {
+
           var x = document.getElementById('filetbl').insertRow();
           var cell = x.insertCell();
-          cell.innerHTML = data[i].FileHash.substr(0, 20) + "...";
+          cell.innerHTML = data[i].FileHash.substr(0, 13) + '...';
 
           cell = x.insertCell();
           cell.innerHTML = data[i].FileName;
 
           cell = x.insertCell();
-          cell.innerHTML = data[i].FileSize;
+          cell.innerHTML = data[i].FileSize + ' B';
 
           cell = x.insertCell();
           cell.innerHTML = data[i].UploadAt;
@@ -150,18 +154,20 @@
           cell.innerHTML = data[i].LastUpdated;
 
           cell = x.insertCell();
-          cell.innerHTML = downloadHtml.format(data[i].FileHash, queryParams()) + cdlFileHtml
-            .format(data[i].FileHash, queryParams()) +
-            renameFileHtml.format(data[i].FileHash, data[i].FileName, data[i].FileHash,
-              queryParams());
-        }
-      }
+          // cell.innerHTML = downloadHtml.format(data[i].FileHash, queryParams()) + cdlFileHtml
+          //   .format(data[i].FileHash, queryParams()) +
+          //   renameFileHtml.format(data[i].FileHash, data[i].FileName, data[i].FileHash,
+          //     queryParams());
+       }
+
+      } //success:function
     });
   }
 
   function toUploadFile() {
-    // window.location.href = '/file/upload?' + queryParams();
-    window.location.href = "/static/view/upload.html";
+    window.location.href = '/file/upload?' + queryParams();  //带着username和token参数访问/file/upload
+    //window.location.href = "/static/view/upload.html";
+
   }
 
   function downloadFile(durl) {

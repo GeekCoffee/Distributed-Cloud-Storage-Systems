@@ -4,7 +4,7 @@ package DB
 
 import (
 	MyDB "./Mysql"
-	"database/sql"
+
 	"fmt"
 )
 
@@ -20,7 +20,7 @@ func UploadFileSucFinished(fSha1, fName, fPath string , fSize int64) bool {
 	defer stmtIns.Close()
 
 	//Result接口是对已经执行SQL的反馈总结
-	ret, err := stmtIns.Exec(fSha1, fName, fPath, fSize)
+	ret, err := stmtIns.Exec(fSha1, fPath, fName, fSize)
 	if err != nil{
 		fmt.Printf("stmtIn.Exec is error: %s\n", err.Error())
 		return false
@@ -38,13 +38,7 @@ func UploadFileSucFinished(fSha1, fName, fPath string , fSize int64) bool {
 }
 
 
-//meta包不能使用，因为循环导入错误
-type TableFileMeta struct {
-	FileHash sql.NullString
-	FileName sql.NullString
-	FileSize sql.NullInt64
-	FilePath sql.NullString
-}
+
 
 //GetFileMetaFromDB: 通过fSha1查找文件元信息
 func GetFileMetaFromDB(fSha1 string) (*TableFileMeta, error) {
@@ -60,7 +54,7 @@ func GetFileMetaFromDB(fSha1 string) (*TableFileMeta, error) {
 	//QueryRow(arg)是Prepare中的问号
 	err = stmtQuery.QueryRow(fSha1).Scan(&fMeta.FileHash, &fMeta.FileName, &fMeta.FilePath, &fMeta.FileSize)
 	if !fMeta.FileHash.Valid { //Valid is true if string not null, else Valid is false
-		fmt.Println("fMeta.FileHash is nil !!!, file path = /DB/tbl_file.go 56rows")
+		fmt.Println("fMeta.FileHash is nil !!!, file path = /DB/tbl_file.go 56rows, error: "+err.Error())
 	}
 	if err != nil{
 		fmt.Println("/DB/tbl_file.go 58row is error: " + err.Error())
@@ -69,4 +63,3 @@ func GetFileMetaFromDB(fSha1 string) (*TableFileMeta, error) {
 
 	return &fMeta, nil //数据量大的结构体都用引用传递
 }
-//e21414b36bc2bde69020e2aa202ca8fe9a51f7fa

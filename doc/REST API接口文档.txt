@@ -1,3 +1,6 @@
+//写完所有RESTful接口之后，一个一个进行测试!
+//以下所有API接口，除了/user/signin和/user/signup不需要token外，其他访问都需要token
+
 //对文件的操作
 
 

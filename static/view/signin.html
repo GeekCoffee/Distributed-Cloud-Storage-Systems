@@ -64,7 +64,6 @@
 </body>
 
 <script lang="javascript">
-  var ip = "localhost:8080"
   function onSignin() {
     var username = document.getElementById('username');
     var password = document.getElementById('password');
@@ -79,19 +78,17 @@
         alert(err);
       },
       success: function (body) {
-        // localStorage.setItem("token", body.data.Token)
-        // localStorage.setItem("username", body.data.Username)
+        //得到json字符串,然后使用JQuery.parseJSON(jsonStr) => 解析为json对象
+        var jsonObj = $.parseJSON(body)  //从json字符串解析成json对象
+        localStorage.setItem("token", jsonObj.data.Token)  //设置key-value
+        localStorage.setItem("username", jsonObj.data.Username)
+
+
         // // 增加上传入口ip:port
-        // localStorage.setItem("uploadEntry", body.data.UploadEntry);
+        localStorage.setItem("uploadEntry", jsonObj.data.UploadEntry);
         // // 增加下载入口ip:port
-        // localStorage.setItem("downloadEntry", body.data.DownloadEntry);
-        // window.location.href = body.data.Location;
-        if (body == "success") {
-          //alert("登录验证通过，登录成功！");
-          window.location.href = "http://" + ip + "/user/homePage"
-        }else{
-          alert("登录失败！");
-        }
+        // localStorage.setItem("downloadEntry", jsonObj.data.DownloadEntry);
+        window.location.href = jsonObj.data.Location;  //重定向到首页
       }
     });
   }

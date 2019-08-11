@@ -2,7 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"strconv"
 	"time"
+
+	"../util"
 )
 
 //用于测试标准库的包和函数的
@@ -39,9 +43,30 @@ func main() {
 	//	count++
 	//}
 	//fmt.Println(count)
+
+
 	ts := fmt.Sprintf("%x", time.Now().Unix())
 	fmt.Println(ts[:8])
+	token := util.MD5([]byte("admin"+ts+"%!*(")) + ts[:8]
+	fmt.Println(token)
 
-	fmt.Println(time.Now().Unix())
+	tokenCreateTime, err := strconv.ParseUint(token[32:],16, 64)
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	fmt.Println(tokenCreateTime)
+
+
+	//nowTime := time.Now().Unix()  //1min = 60秒 , 60min = 3600s , 2h = 120min = 7200
+	//if nowTime - tokenCreateTime >= 7200 { //nowTime时间点 >= tokenTime时间点 + 2h
+	//	fmt.Println("token_time has been failed.")
+	//}else{
+	//	fmt.Println("token_time is valid.")
+	//}
+
+	//sumToken := 3600 * 24 * 30 * 2  //2个月60天
+	//fmt.Println(sumToken)
+
 
 }

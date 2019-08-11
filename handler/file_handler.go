@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -14,6 +15,8 @@ import (
 
 	"../meta"
 	"../util"
+
+	DBLayer "../DB"
 )
 
 const (
@@ -38,7 +41,7 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 
 		//从request请求体中，读取form表单中<input>中的文件file数据
 		//表单中的File是Mutil类型的File，并不是我们文件系统中的File类型
-		file, fileHead, err := r.FormFile("file") //key是<input />标签中的name的值
+		file, fileHeader, err := r.FormFile("file") //key是<input />标签中的name的值
 		if err != nil{
 			fmt.Printf("Failured to read file, err:%s\n", err.Error())
 			return
@@ -47,8 +50,8 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 
 		//记录文件元数据信息
 		fileMeta := meta.FileMeta{
-			FileName:fileHead.Filename,
-			Location:Upload_File_Path_Prefix + fileHead.Filename,
+			FileName:fileHeader.Filename,
+			Location:Upload_File_Path_Prefix + fileHeader.Filename,
 			UploadTime:time.Now().Format(BaseFormat),
 		}
 
@@ -61,7 +64,7 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 		}
 		defer newFile.Close()
 
-		//把上传上来的文件数据通过IO拷贝到新文件中
+		//把上传上来的文件数据通过IO拷贝到新文件中 , 核心重点!
 		fileMeta.FileSize, err = io.Copy(newFile, file)
 		if err != nil{
 			fmt.Printf("Failured to copy file, error:%s\n", err.Error())
@@ -75,11 +78,20 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 		//把文件元信息添加到meta.fileMetas中
 		//meta.UpdateFileMeta(fileMeta)
 
-		//把文件元信息存储到mysql数据库中
+		//把文件元信息存储到mysql数据库中，即tbl_file文件信息表中
 		_ = meta.UpdateFileMetaToDB(fileMeta)
 
-		//重定向操作，提示用户已经完成文件上传
-		http.Redirect(w, r, "/file/upload/suc", http.StatusFound)
+		//更新完DB中的tbl_file表，就要更新tbl_user_file用户文件信息表了，要知道是哪个用户上传了文件
+		r.ParseForm()
+		userName := r.Form.Get("username")
+		ok := DBLayer.UpdateUserFileAtUploadFinished(userName, fileMeta.FileSHA1, fileMeta.FileName, fileMeta.FileSize)
+		if ok {
+			//先alert一下，再重定向到home页面
+			//http.Redirect(w, r, "/user/info", http.StatusFound)
+			w.Write([]byte("success"))
+		}
+
+
 	}
 }
 
@@ -138,9 +150,14 @@ func QueryFileMetasHandler(w http.ResponseWriter, r *http.Request){
 func DownloadFileHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()  //从request对象中解析form表单中的数据
 	fSha1 := r.Form.Get("filehash") //结果存储在Form对象，Form类型是url.Values -> map[string][]string
-	fMeta := meta.GetFileMeta(fSha1)
+	fMeta,err := meta.GetFileMetaFromDB(fSha1)
+	if err != nil{
+		log.Fatal("GetFileMetaFromDB is error: " + err.Error())
+		return
+	}
 
 	fd, err := os.Open(fMeta.Location)
+	fmt.Println("file_path:", fMeta.Location)
 	if err != nil{
 		w.WriteHeader(http.StatusInternalServerError)
 		return

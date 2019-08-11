@@ -38,23 +38,23 @@
     </div>
     <div style="width:60%;height:30%;text-align:center;margin: 50px auto;">
       <form id="upForm" action="#" method="post" enctype="multipart/form-data">
-        <!-- <input id="file" name="file" type="file" class="file" data-msg-placeholder="选择文件"> -->
-        <input id="file" type="file" name="file" />
-       <!-- <button id="上传" type="button" onclick="onUpload();">upload</button> -->
-        <input id="submitButton" type="submit" />upload
+          <!-- <input id="file" name="file" type="file" class="file" data-msg-placeholder="选择文件"> -->
+          <input id="file" type="file" name="file" />
+          <button id="上传" type="button" onclick="onUpload();">upload</button>
       </form>
     </div>
   </div>
 </body>
 
 <script lang="javascript">
-  // $(document).ready(function () {
-  //   var upEntry = localStorage.getItem("uploadEntry");
-  //   if (upEntry != "") {
-  //     alert("http://" + upEntry + "/file/upload");
-  //     document.getElementById("upForm").action = "http://" + upEntry + "/file/upload";
-  //   }
-  // });
+  $(document).ready(function () {
+    localStorage.setItem("uploadEntry", "localhost:8080")
+    var upEntry = localStorage.getItem("uploadEntry");
+    if (upEntry != "") {
+      alert("http://" + upEntry + "/file/upload");
+      document.getElementById("upForm").action = "http://" + upEntry + "/file/upload";
+    }
+  });
 
   function onUpload() {
     var upUrl = "/file/upload?" + queryParams();
@@ -66,6 +66,8 @@
         upUrl = "http://" + upEntry + "/file/upload?" + queryParams();
       }
     }
+
+    //FormData(HTML_ID)，参数需要的是HTMLElement类型的元素，jquery拿到的是HTMLELem的集合，所以要取[0]
     $.ajax({
       url: upUrl,
       type: 'POST',
@@ -77,9 +79,9 @@
         alert('请求报错信息: ' + JSON.stringify(err));
       },
       success: function (res) {
-        alert('请求返回结果: ' + JSON.stringify(res));
-        if (res.code == 0) {
-          window.location.href = "/static/view/home.html";
+        if (res == "success") {
+          alert('上传成功!')
+          window.location.href = "/static/view/home.html";  //重定向到home主页
         }
       }
     });
