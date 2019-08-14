@@ -2,27 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="08bfeeb2-8267-4092-9011-ca2e253ee475" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DB/entity.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DB/tbl_user_file.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/table.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handler/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/handler/user_file_handler.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cache/redis/redis_conn.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handler/defs.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/handler/multipart_upload_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/tbl_file.go" beforeDir="false" afterPath="$PROJECT_DIR$/DB/tbl_file.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DB/tbl_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/DB/tbl_user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/REST API接口文档.txt" beforeDir="false" afterPath="$PROJECT_DIR$/doc/REST API接口文档.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/schema.txt" beforeDir="false" afterPath="$PROJECT_DIR$/doc/schema.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/file_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/file_handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/handler/user_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/handler/user_handler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/js/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/js/auth.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/view/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/view/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/view/signin.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/view/signin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/view/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/view/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/view/upload.html" beforeDir="false" afterPath="$PROJECT_DIR$/static/view/upload.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/testInstance/test.go" beforeDir="false" afterPath="$PROJECT_DIR$/testInstance/test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,20 +31,7 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="27" column="36" lean-forward="true" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
-              <folding>
-                <element signature="e#14#58#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -102,14 +74,12 @@
         <option value="$PROJECT_DIR$/doc/import_conception" />
         <option value="$PROJECT_DIR$/util/resp.go" />
         <option value="$PROJECT_DIR$/doc/table.sql.go" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/DB/tbl_user.go" />
         <option value="$PROJECT_DIR$/static/js/auth.js" />
         <option value="$USER_HOME$/Downloads/filestore-server-master/filestore-server/service/account/handler/user.go" />
         <option value="$PROJECT_DIR$/DB/tbl_file.go" />
         <option value="$PROJECT_DIR$/meta/filemeta.go" />
         <option value="$PROJECT_DIR$/static/view/signup.html" />
-        <option value="$PROJECT_DIR$/testInstance/test.go" />
         <option value="$PROJECT_DIR$/DB/tbl_user_token.go" />
         <option value="$PROJECT_DIR$/handler/user_handler.go" />
         <option value="$PROJECT_DIR$/doc/schema.txt" />
@@ -124,6 +94,14 @@
         <option value="$PROJECT_DIR$/handler/user_file_handler.go" />
         <option value="$PROJECT_DIR$/static/view/home.html" />
         <option value="$PROJECT_DIR$/main.go" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/testInstance/test_SMTP.go" />
+        <option value="$PROJECT_DIR$/src/github.com/gomodule/redigo/redis/pool.go" />
+        <option value="$PROJECT_DIR$/handler/multipart_upload/go.go" />
+        <option value="$PROJECT_DIR$/cache/redis/redis_conn.go" />
+        <option value="$PROJECT_DIR$/handler/defs.go" />
+        <option value="$PROJECT_DIR$/testInstance/test.go" />
+        <option value="$PROJECT_DIR$/handler/multipart_upload_handler.go" />
       </list>
     </option>
   </component>
@@ -169,15 +147,15 @@
     <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="Z:\Goland_Project\DistributedCloudStorage\doc" />
-      <recent name="Z:\Goland_Project\DistributedCloudStorage" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="Z:\Goland_Project\DistributedCloudStorage\static" />
       <recent name="Z:\Goland_Project\DistributedCloudStorage" />
       <recent name="Z:\Goland_Project\DistributedCloudStorage\util" />
       <recent name="Z:\Goland_Project\DistributedCloudStorage\static\view" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="Z:\Goland_Project\DistributedCloudStorage\doc" />
+      <recent name="Z:\Goland_Project\DistributedCloudStorage" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -192,7 +170,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Build.go build main.go">
+  <component name="RunManager" selected="Go Build.go build test.go">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="DistributedCloudStorage" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -211,16 +189,15 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Build.go build main.go" />
         <item itemvalue="Go Build.go build test.go" />
+        <item itemvalue="Go Build.go build main.go" />
       </list>
     </recent_temporary>
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="32" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15101388" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.078441836" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -245,35 +222,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.webworker.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="1433" column="12" selection-start-line="1433" selection-start-column="12" selection-end-line="1433" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://Z:/Go/src/net/http/status.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="26" column="52" lean-forward="true" selection-start-line="26" selection-start-column="52" selection-end-line="26" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tmp/执行表.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://Z:/Go/src/encoding/json/encode.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="153" column="67" lean-forward="true" selection-start-line="153" selection-start-column="67" selection-end-line="153" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tmp/3.JPG" />
     <entry file="file://Z:/Go/src/time/format.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="195">
@@ -306,13 +254,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
           <caret line="263" column="27" selection-start-line="263" selection-start-column="27" selection-end-line="263" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://Z:/Go/src/io/io.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="369" column="27" lean-forward="true" selection-start-line="369" selection-start-column="27" selection-end-line="369" selection-end-column="27" />
         </state>
       </provider>
     </entry>
@@ -350,26 +291,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tmp/对自己说的话.txt">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/util/resp.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="14" column="44" selection-start-line="14" selection-start-column="44" selection-end-line="14" selection-end-column="44" />
-          <folding>
-            <element signature="e#14#48#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="90">
-            <caret line="3" column="45" lean-forward="true" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es5.d.ts">
       <provider selected="true" editor-type-id="text-editor">
@@ -448,16 +369,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
           <caret line="25" column="64" selection-start-line="25" selection-start-column="64" selection-end-line="25" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testInstance/test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="55" column="5" lean-forward="true" selection-start-line="52" selection-start-column="4" selection-end-line="55" selection-end-column="5" />
-          <folding>
-            <element signature="e#14#31#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -576,13 +487,100 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="60">
+            <caret line="2" column="25" selection-start-line="2" selection-start-column="25" selection-end-line="2" selection-end-column="25" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="27" column="36" lean-forward="true" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
+        <state relative-caret-position="570">
+          <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
           <folding>
             <element signature="e#14#58#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/Go/src/time/time.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="924" column="21" lean-forward="true" selection-start-line="924" selection-start-column="21" selection-end-line="924" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/multipart_upload/go.go" />
+    <entry file="file://$PROJECT_DIR$/src/github.com/gomodule/redigo/redis/pool.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="316">
+          <caret line="185" column="39" selection-start-line="185" selection-start-column="39" selection-end-line="185" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/resp.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="563">
+          <caret line="49" column="33" selection-start-line="49" selection-start-column="33" selection-end-line="49" selection-end-column="33" />
+          <folding>
+            <element signature="e#14#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/Go/src/builtin/builtin.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="57" column="5" selection-start-line="57" selection-start-column="5" selection-end-line="57" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cache/redis/redis_conn.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="11" column="1" lean-forward="true" selection-start-line="11" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+          <folding>
+            <element signature="e#15#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testInstance/test_SMTP.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://Z:/Go/src/io/io.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="58" column="39" lean-forward="true" selection-start-line="57" selection-start-column="13" selection-end-line="58" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/defs.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testInstance/test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="593">
+          <caret line="74" column="5" selection-start-line="67" selection-start-column="4" selection-end-line="74" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/handler/multipart_upload_handler.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="403">
+          <caret line="73" column="21" lean-forward="true" selection-start-line="73" selection-start-column="21" selection-end-line="73" selection-end-column="21" />
         </state>
       </provider>
     </entry>

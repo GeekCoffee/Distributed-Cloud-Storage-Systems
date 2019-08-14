@@ -3,10 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"strconv"
-	"time"
-
-	"../util"
+	"os"
 )
 
 //用于测试标准库的包和函数的
@@ -45,17 +42,17 @@ func main() {
 	//fmt.Println(count)
 
 
-	ts := fmt.Sprintf("%x", time.Now().Unix())
-	fmt.Println(ts[:8])
-	token := util.MD5([]byte("admin"+ts+"%!*(")) + ts[:8]
-	fmt.Println(token)
-
-	tokenCreateTime, err := strconv.ParseUint(token[32:],16, 64)
-	if err != nil{
-		log.Fatal(err)
-	}
-
-	fmt.Println(tokenCreateTime)
+	//ts := fmt.Sprintf("%x", time.Now().Unix())
+	//fmt.Println(ts[:8])
+	//token := util.MD5([]byte("admin"+ts+"%!*(")) + ts[:8]
+	//fmt.Println(token)
+	//
+	//tokenCreateTime, err := strconv.ParseUint(token[32:],16, 64)
+	//if err != nil{
+	//	log.Fatal(err)
+	//}
+	//
+	//fmt.Println(tokenCreateTime)
 
 
 	//nowTime := time.Now().Unix()  //1min = 60秒 , 60min = 3600s , 2h = 120min = 7200
@@ -67,6 +64,15 @@ func main() {
 
 	//sumToken := 3600 * 24 * 30 * 2  //2个月60天
 	//fmt.Println(sumToken)
+
+	err := os.MkdirAll("./data/" + "uploadId",0666)
+	if err != nil{
+		log.Fatal(err)
+	}
+	_, err = os.Create("./data/" + "uploadId" + "/hello")
+	if err != nil{
+		log.Fatal(err)
+	}
 
 
 }
