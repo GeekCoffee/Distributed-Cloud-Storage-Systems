@@ -10,9 +10,9 @@ import (
 
 //自定义HTTP响应体定义
 type RespMsg struct{
-	Code int `json:"code"`  //自定义状态码
-	Msg  string `json:"msg"` //自定义message
-	Data interface{} `json:"data"` //自定义数据结构
+	Code int `json:"code"`  //自定义状态码，一般参照HTTP状态码
+	Msg  string `json:"msg"` //自定义返回告知消息
+	Data interface{} `json:"data"` //自定义想返回的数据
 }
 
 //NewRespMsg: 生成Response对象

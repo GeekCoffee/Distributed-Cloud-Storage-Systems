@@ -1,10 +1,55 @@
-//写完所有RESTful接口之后，一个一个进行测试!
 //以下所有API接口，除了/user/signin和/user/signup不需要token外，其他访问都需要token
 
-//对文件的操作
+# HTTP Status Code:
+1) 1表示消息、2表示成功、3表示重定向、4表示请求错误、5表示服务器内部错误
+2) 200-Ok  201-Created  204-No Content
+3) 400-Bad Request  401-未授权  403-授权但权限不够，被禁止
+4) 500-Internal Server Error
+
+#不特别说明Args，默认是Client Args
 
 
-//对用户的操作
+#自定义返回结构体，都统一使用util包下的resp.go文件中的RespMsg结构体
+
+#先一步步完善功能，后期再一步一步优化一些细节，不要一开始就想得很完美
+
+# REST API：用户本身
+1)用户注册: /user/register, Method:POST, StatusCode: 201 400 500    OK
+Agrs=>username, password, email, phone
+2)用户登录: /user/login, Method:POST, StatusCode: 200 400 401 403 500  OK
+Agrs=>username or email or phone, password
+3)查询用户信息: /user/get_user_info, Method:GET, StatusCode: 200 400 401 403 500   OK
+Agrs=>username, token
+4)上传用户头像: /user/update_avatar, Method:PUT, StatusCode: 200 400 500
+5)单独查询用户头像： /user/get_avatar, Method:GET, StatusCode: 200 400 500
+
+
+# REST API：用户/文件
+1)用户上传文件页面: /user/file/upload, Method：GET, StatusCode: 200 400 500
+Agrs=> username, token
+2)用户上传文件: /user/file/upload, Method:POST, StatusCode: 201 400 401 403 500
+Agrs=> username, token, form表单
+3)查询用户下的某个文件的元信息: /user/file/one_meta, Method:GET, StatusCode: 200 400 500
+Agrs=> username, token, filehash
+4)批量查询用户下的文件元信息: /user/file/query_metas, Method:GET, StatusCode: 200 400 500
+Agrs=> username, token, limit(查询数量)
+5)下载用户下的某个文件: /user/file/download, Method:GET, StatusCode: 200 400 500
+Agrs=> username, token, filehash
+6)更新用户下的某个文件的元信息: /user/file/update_meta, Method:PUT, StatusCode: 200 400 500
+Agrs=> username, token, filehash, optype(操作类型：0-更改目录名等)， newfname
+7)删除用户下的某个文件(元信息以及磁盘文件)：/user/file/delete, Method:DELETE ,StatusCode: 200 400 500
+Agrs=> username, token, filehash
+
+
+
+#
+
+
+
+
+
+
+
 
 
 

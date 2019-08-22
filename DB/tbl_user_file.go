@@ -36,6 +36,7 @@ func GetUserFilesInfo(userName string, limit int)([]UserFile, error) {
 	}
 	defer  stmtQ.Close()
 
+	//查询多行记录使用Query，查询一行一般使用QueryRow
 	rows, err := stmtQ.Query(userName, limit)
 	if err != nil{
 		log.Fatal(err)

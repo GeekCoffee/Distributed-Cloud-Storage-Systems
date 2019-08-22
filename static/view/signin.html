@@ -29,7 +29,7 @@
               <label for="username" class="l"> 用户名:</label>
             </td>
             <td>
-              <input id="username" type="text" style="height:30px;width:250px;padding-right:50px;">
+              <input id="username" type="text" placeholder="用户名/电子邮箱/手机号码" style="height:30px;width:250px;padding-right:50px;">
             </td>
           </tr>
           <tr>
@@ -53,7 +53,7 @@
             <td>
             </td>
             <td>
-              <input class="btn btn-success" type="button" style="margin:0 auto;width:250px;" value="登录"
+              <input id="loginBtn" class="btn btn-success" type="button" style="margin:0 auto;width:250px;" value="登录"
                 onclick='onSignin()' />
             </td>
           </tr>
@@ -64,11 +64,23 @@
 </body>
 
 <script lang="javascript">
+
+  $(document).ready(function () {
+    $('#password').bind('keyup', function(event) {
+      if (event.keyCode == "13") {
+        //回车执行查询
+        onSignin();
+      }
+    });
+  })
+
+
+
   function onSignin() {
     var username = document.getElementById('username');
     var password = document.getElementById('password');
     $.ajax({
-      url: "/user/signin",
+      url: "/user/login",
       type: "POST",
       data: {
         "username": username.value,
@@ -80,6 +92,9 @@
       success: function (body) {
         //得到json字符串,然后使用JQuery.parseJSON(jsonStr) => 解析为json对象
         var jsonObj = $.parseJSON(body)  //从json字符串解析成json对象
+        if (jsonObj.code  == 500 || jsonObj.msg == "failed") {
+          alert('用户名或者密码错误!')
+        }
         localStorage.setItem("token", jsonObj.data.Token)  //设置key-value
         localStorage.setItem("username", jsonObj.data.Username)
 

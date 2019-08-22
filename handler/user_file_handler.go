@@ -1,5 +1,7 @@
 package handler
 
+//秒传的应用场景：用户文件上传、离线下载、好友分享等
+
 import (
 	"encoding/json"
 	"log"

@@ -42,11 +42,11 @@ func Sha256(data []byte) string {
 func FileSha1(file *os.File) string {
 	_sha1 := sha1.New()  //生成一个hash.Hash接口
 
-	//官方用法：io.WriteString(h, "His money is twice tainted:")，把一串字符串加密
+	//官方用法：io.WriteString(_sha1, "His money is twice tainted:")，把一串字符串加密
 	//这是对file对象进行SHA1加密
 	io.Copy(_sha1, file)
 
-	//Sum函数为_sha1对象的校验和，即最终的Hash函数，如果已经使用New()的方法，那么就不需要Sum的时候再传入参数了，所以参数为nil
+	//Sum函数为_sha1对象的校验和，即最终的Hash值，如果已经使用New()的方法，那么就不需要Sum的时候再传入参数了，所以参数为nil
 	return hex.EncodeToString(_sha1.Sum(nil))
 }
 

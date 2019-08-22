@@ -65,11 +65,11 @@ func main() {
 	//sumToken := 3600 * 24 * 30 * 2  //2个月60天
 	//fmt.Println(sumToken)
 
-	err := os.MkdirAll("./data/" + "uploadId",0666)
+	err := os.MkdirAll("./static/" + "user_name_dir",0666)
 	if err != nil{
 		log.Fatal(err)
 	}
-	_, err = os.Create("./data/" + "uploadId" + "/hello")
+	_, err = os.Create("./static/" + "user_name_dir" + "/hello.jpg")
 	if err != nil{
 		log.Fatal(err)
 	}

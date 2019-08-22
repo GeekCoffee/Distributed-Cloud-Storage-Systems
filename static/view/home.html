@@ -72,8 +72,8 @@
   window.onload = function () {
     var username = document.getElementById('username');
     $.ajax({
-      url: "/user/info?" + queryParams(),
-      type: "POST",
+      url: "/user/get_user_info?" + queryParams(),
+      type: "GET",
       error: function (err) {
         alert(JSON.stringify(err));
       },
@@ -94,8 +94,8 @@
 
   function updateFileList() {
     $.ajax({
-      url: "/user/file/meta/query?" + queryParams(),
-      type: "POST",
+      url: "/user/file/query_metas?" + queryParams(),
+      type: "GET",
       data: {
         limit: 15
       },

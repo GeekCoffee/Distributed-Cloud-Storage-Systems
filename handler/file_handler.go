@@ -21,7 +21,7 @@ import (
 
 const (
 	Upload_File_Path_Prefix= "./tmp/"   //上传到的文件路径的前缀
-	BaseFormat = "2006-01-02 15:04:05"  //标准时间模板
+	BaseTimeFormat = "2006-01-02 15:04:05"  //标准时间模板
 )
 
 
@@ -32,7 +32,7 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 	//把文件转化为字节流
 	byteStream, err := ioutil.ReadFile("./static/view/upload.html")  // "./"指的是根目录
 	if err != nil{
-		io.WriteString(w, "internal err!")  //读取文件的时候发生错误，可以写入log文件中
+		w.WriteHeader(http.StatusInternalServerError)  //读取文件的时候发生错误
 		return
 	}
 	io.WriteString(w, string(byteStream)) //把字节流转化为string类型，写入响应体中的content部分，并返回
@@ -40,7 +40,7 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 	}else if r.Method == http.MethodPost {  //REST ful中规定，POST是上传文件,接收文件并存储到本地
 
 		//从request请求体中，读取form表单中<input>中的文件file数据
-		//表单中的File是Mutil类型的File，并不是我们文件系统中的File类型
+		//表单中的File是Multipart.File类型的File，并不是我们文件系统中的File类型
 		file, fileHeader, err := r.FormFile("file") //key是<input />标签中的name的值
 		if err != nil{
 			fmt.Printf("Failured to read file, err:%s\n", err.Error())
@@ -50,13 +50,14 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 
 		//记录文件元数据信息
 		fileMeta := meta.FileMeta{
-			FileName:fileHeader.Filename,
+			FileName:fileHeader.Filename,  //包括文件后缀名
 			Location:Upload_File_Path_Prefix + fileHeader.Filename,
-			UploadTime:time.Now().Format(BaseFormat),
+			UploadTime:time.Now().Format(BaseTimeFormat),
 		}
 
 
 		//然后在本地磁盘创建一个对应的文件，用于存储用户上传的文件数据
+		//os.Create方法只能创建文件，创建不了目录，创建目录使用os.Mkdir或者os.MkdirAll
 		newFile, err := os.Create(fileMeta.Location)
 		if err != nil{
 			fmt.Printf("Faliured to create file, err:%s\n", err.Error())
@@ -64,7 +65,7 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 		}
 		defer newFile.Close()
 
-		//把上传上来的文件数据通过IO拷贝到新文件中 , 核心重点!
+		//把上传上来的文件数据通过I/O拷贝到新文件中 , 核心重点!
 		fileMeta.FileSize, err = io.Copy(newFile, file)
 		if err != nil{
 			fmt.Printf("Failured to copy file, error:%s\n", err.Error())
@@ -89,9 +90,10 @@ func UploadFileHandler(w http.ResponseWriter, r *http.Request){  //响应体w，
 			//先alert一下，再重定向到home页面
 			//http.Redirect(w, r, "/user/info", http.StatusFound)
 			w.Write([]byte("success"))
+		}else{
+			w.WriteHeader(http.StatusInternalServerError)
+			return
 		}
-
-
 	}
 }
 

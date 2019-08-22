@@ -2,11 +2,16 @@ package handler
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
 	"time"
+
+	"github.com/mgutz/str"
 
 	"../util"
 
@@ -16,6 +21,9 @@ import (
 const(
 	EncSalt = "+_)(*&^%$#@!~`" //用于加强保密性的盐值，从+到1的shift键，还有最后的`
 	TokenSalt = "%!*("  //token的盐值
+	AvatarImgPathPrefix = "./static/img/avatar/"
+	HttpDomain = "http://localhost:8080/" //HTTP域名前缀
+	VideoDir = ""
 )
 
 //UserSignUpHandler: 用于处理用户注册请求的handler
@@ -32,9 +40,10 @@ func UserSignUpHandler(w http.ResponseWriter, r *http.Request) {
 		userName := r.Form.Get("username")
 		password := r.Form.Get("password")
 		email := r.Form.Get("email")
+		phone := r.Form.Get("phone")
 
 		password = util.Sha256([]byte(password+EncSalt)) //使用SHA256生成64个加密字符
-		flag := DBLayer.UserSignUpToDB(userName, password, email)
+		flag := DBLayer.UserSignUpToDB(userName, password, email, phone)
 		if flag {
 			w.Write([]byte("success"))
 			return
@@ -77,7 +86,7 @@ func UserLoginInHandler(w http.ResponseWriter, r *http.Request) {
 
 		//3.登录成功后重定向到首页
 		resp := &util.RespMsg{
-			Code:0,   //Code=0是请求成功, Code=-1为失败
+			Code:200,   //参照HTTP Status Code
 			Msg:"OK",
 			Data: struct {
 				Location string //登录成功后重定向的URL
@@ -96,6 +105,11 @@ func UserLoginInHandler(w http.ResponseWriter, r *http.Request) {
 
 //UserInfoHandler: 查询用户信息
 func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+
 	//1.解析请求参数
 	r.ParseForm()
 	userName := r.Form.Get("username")
@@ -104,14 +118,19 @@ func UserInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	//3.查询用户信息
 	user, err := DBLayer.GetUserInfo(userName)
+	respErr := util.RespMsg{
+		Code:500,
+		Msg:"failed",
+		Data:nil,
+	}
 	if err != nil{
-		fmt.Println(err.Error())
+		w.Write(respErr.JSONBytes())
 		return
 	}
 
 	//4.组装response并返回用户数据
 	resp := util.RespMsg{
-		Code:0,
+		Code:200,
 		Msg:"OK",
 		Data:*user,
 	}
@@ -160,11 +179,152 @@ func IsTokenValid(token string) bool {
 	return true
 }
 
+//UpdateAvatarImg: 上传用户头像
+func UpdateAvatarImg(w http.ResponseWriter, r *http.Request){
+	if r.Method == http.MethodGet {   //从HTTP请求消息体中可以获取得到是否是GET方法
+		// "./"指的是根目录
+		// io调用了操作系统的系统调用接口，委托文件系统进行文件的读写操作，然后把数据放入byteStream指定的变量域中
+		byteStream, err := ioutil.ReadFile("./static/view/testImg.html")
+		if err != nil{
+			w.WriteHeader(http.StatusInternalServerError)  //读取文件的时候发生错误
+			return
+		}
+		//把byteStream变量的值写入到响应体的content部分中，然后由web服务程序返回到客户端
+		io.WriteString(w, string(byteStream))
+	}
+
+	if r.Method != http.MethodPut {  //按表单方式上传
+		w.Write([]byte("please use GET！"))
+		return
+	}
+
+	r.ParseForm()  //解析HTTP消息请求体中的表单数据，结构放入Form结构体中
+	userName := r.Form.Get("username")
+
+	userName = "root"
+	userNamePre := userName + "/"
+	//token := r.Form.Get("token")
+
+	// 前端表单中的name域
+	imgFile, fileHeader, err := r.FormFile("imgfile")
+	if err != nil{
+		fmt.Printf("Failured to read img_file, err:%s\n", err.Error())
+		return
+	}
+	defer imgFile.Close()  //文件系统打开了这个文件进程，不使用就关闭这个文件描述符对应的进程
+
+	//创建一个头像目录，目录名是username，头像文件名是img_hash后的名字
+	err = os.MkdirAll(AvatarImgPathPrefix + userNamePre, 0666)
+	if err != nil{
+		log.Fatal(err)
+		return
+	}
+
+	fileType := getFileType(fileHeader.Filename)  //得到文件类型，带"."的后缀名
+
+	oldPath := AvatarImgPathPrefix + userNamePre + fileHeader.Filename
+	newFile, err := os.Create(oldPath)  //创建一个空文件
+	if err != nil{
+		fmt.Printf("Faliured to create file, err:%s\n", err.Error())
+		return
+	}
+
+	_, err = io.Copy(newFile, imgFile)  //调用文件系统接口，委托文件系统做两个文件间的数据覆盖工作
+	if err != nil{
+		fmt.Printf("Failured to copy file, error:%s\n", err.Error())
+		return
+	}
+
+	//使用SHA1算法，生成hash值，在此之前把文件指针归为文件开头位置，因为后面要使用到copy函数
+	newFile.Seek(0,0) //whence是相对位置，0表示从文件头开始，偏移offset个位置，然后开始读写文件
+	imgFileHash := util.FileMD5(newFile)
+	newPath := AvatarImgPathPrefix + userNamePre + imgFileHash + fileType
+	newFile.Close()  //关闭掉此文件的文件句柄，不然这个文件句柄进程不能被其他进程所读写
+	err = os.Rename(oldPath, newPath)
+	if err != nil {
+		fmt.Println("os.Rename is error: ", err)
+		return
+	}
+
+	//http://localhost:8080/static/img/avatar/williamchen/3f41fa9ae00a16b32a0a1ad68847e053.
+	avatarImgURL := HttpDomain + "static/img/avatar/" + userNamePre + imgFileHash + fileType
+
+	//把用户头像的URL存入数据库
+	ok := DBLayer.UpdateAvatarURL(userName, avatarImgURL)
+	if !ok {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("success"))
+}
+
+//getFileType: 得到文件后缀名
+func getFileType(fileName string) string {
+	pos1 := str.IndexOf(fileName, ".", 0)
+	if pos1 == -1 { //匹配失败
+		return ""
+	}
+
+	//说明匹配到了，提取出所有页面的pageId，包括主页的index.jsp的ID，即index
+	pos1 = pos1 + len(".")
+	fileType := str.Substr(fileName, pos1, 3) //从pos1位置开始，截取pos2-pos1长度的字符
+	if fileType == "jpe" || fileType == "JPE"{
+		fileType = "jpeg"
+	}
+	fileType = "." + strings.ToLower(fileType)  //把所有后缀名都转换为小写
+	return fileType
+}
+
+//GetUserAvatarImg: 单独获取用户头像
+func GetUserAvatarImg(w http.ResponseWriter, r *http.Request){
+	//传入username和token，token在HTTP拦截器已经检查过了，所以只需要获取username或者其他参数就行了
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusBadRequest) //请求方法不对
+		return
+	}
+
+	r.ParseForm()
+	userName := r.Form.Get("username")
+	userName = "root"
+
+	//从数据库获取avatarImgURL
+	avatarImgURL, ok := DBLayer.GetAvatarImgURL(userName)
+	if !ok {
+		w.WriteHeader(http.StatusInternalServerError) //服务器内部错误
+		return
+	}
+
+	w.Write([]byte(avatarImgURL))
+}
 
 
 
+func GetVideo(w http.ResponseWriter, r *http.Request){
+	r.ParseForm()
+	vid := r.Form.Get("vid")
+
+	videoPath := VideoDir + vid    //得到video文件的完整path
+
+	fmt.Println(videoPath)
+	videoFile, err := os.Open(videoPath)
+	if err != nil{
+		//服务端内部错误，HTTP：500
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err.Error())
+		return
+	}
+	//videoFile是*File类型，File对象表示一个已经打开的文件，即其文件数据已经被加载到用户态内存区域中了
+	defer videoFile.Close()
+
+	//得到videoFile对象引用后，进行转化为mp4编码的二进制流，并输出给client
+	//设置响应体Header，添加头字段，设置MIME类型
+	w.Header().Set("Content-Type","video/mp4")  //client请求video视频文件，以mp4编码格式返回给client
+	http.ServeContent(w, r, "", time.Now(), videoFile)
 
 
+}
 
 
 

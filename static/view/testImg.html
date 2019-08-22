@@ -1,0 +1,69 @@
+<html>
+
+<head>
+    <script src="https://cdn.bootcss.com/jquery/1.11.0-beta3/jquery.js"></script>
+</head>
+
+<body style="width:100%;height:100%;text-align:center;">
+<div style="width:100%;height:100%;margin:0 0 10px 0;text-align: center;">
+    <div style="font-size:20px;font-weight:bold;color:#ddd;
+      margin:0;padding-top:3px;background:#383e4b;height:40px;">
+        文件上传
+    </div>
+    <div style="width:60%;height:30%;text-align:center;margin: 50px auto;">
+        <form id="upForm" action="#" method="put" enctype="multipart/form-data">
+            <!-- <input id="file" name="file" type="file" class="file" data-msg-placeholder="选择文件"> -->
+            <input id="file" type="file" name="imgfile" />
+            <button id="上传" type="button" onclick="onUpload();">upload</button>
+        </form>
+    </div>
+</div>
+</body>
+
+<script lang="javascript">
+    // $(document).ready(function () {
+    //     localStorage.setItem("uploadEntry", "localhost:8080")
+    //     var upEntry = localStorage.getItem("uploadEntry");
+    //     if (upEntry != "") {
+    //         alert("http://" + upEntry + "/file/upload");
+    //         document.getElementById("upForm").action = "http://" + upEntry + "/file/upload";
+    //     }
+    // });
+
+    function onUpload() {
+        //var upUrl = "/user/update_avatar?" + queryParams();
+        var upUrl = "/user/update_avatar";
+        // var upEntry = localStorage.getItem("uploadEntry");
+        // if (upEntry != "" ) {
+        //     if (upEntry.indexOf("http:")>=0) {
+        //         upUrl = upEntry + "/file/upload?" + queryParams();
+        //     } else {
+        //         upUrl = "http://" + upEntry + "/file/upload?" + queryParams();
+        //     }
+        // }
+
+        //FormData(HTML_ID)，参数需要的是HTMLElement类型的元素，jquery拿到的是HTMLELem的集合，所以要取[0]
+        ipHost = "localhost:8080"
+        upUrl = "http://" + ipHost + upUrl
+        $.ajax({
+            url: upUrl,
+            type: 'PUT',
+            cache: false,
+            data: new FormData($('#upForm')[0]),
+            processData: false,
+            contentType: false,
+            error: function (err) {
+                alert('请求报错信息: ' + JSON.stringify(err));
+            },
+            success: function (res) {
+                alert(res)
+                if (res == "success") {
+                    alert('上传成功!')
+                    //window.location.href = "/static/view/home.html";  //重定向到home主页
+                }
+            }
+        });
+    }
+</script>
+
+</html>

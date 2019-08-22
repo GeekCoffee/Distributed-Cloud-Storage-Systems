@@ -41,19 +41,6 @@
           <tr style="margin-bottom: 20px;">
             <td>
               <span class="p">*</span>
-              <label for="email" class="l"> 电子邮箱:</label>
-            </td>
-            <td>
-              <input id="email" type="email" style="height:30px;width:250px;padding-right:50px;">
-            </td>
-          </tr>
-          <tr>
-            <td><br></td>
-            <td></td>
-          </tr>
-          <tr style="margin-bottom: 20px;">
-            <td>
-              <span class="p">*</span>
               <label for="password" class="l"> 密码:</label>
             </td>
             <td>
@@ -67,10 +54,23 @@
           <tr style="margin-bottom: 20px;">
             <td>
               <span class="p">*</span>
-              <label for="passwordc" class="l"> 确认密码:</label>
+              <label for="email" class="l"> 电子邮箱:</label>
             </td>
             <td>
-              <input id="passwordc" type="password" style="height:30px;width:250px;padding-right:50px;">
+              <input id="email" type="email" style="height:30px;width:250px;padding-right:50px;">
+            </td>
+          </tr>
+          <tr>
+            <td><br></td>
+            <td></td>
+          </tr>
+          <tr style="margin-bottom: 20px;">
+            <td>
+              <span class="p">*</span>
+              <label for="phoneNum" class="l"> 手机号码:</label>
+            </td>
+            <td>
+              <input id="phoneNum" type="text" style="height:30px;width:250px;padding-right:50px;">
             </td>
           </tr>
           <tr>
@@ -93,17 +93,29 @@
 </body>
 
 <script lang="javascript">
+
+  $(document).ready(function () {
+    $('#phoneNum').bind('keyup', function(event) {
+      if (event.keyCode == "13") {
+        //回车执行查询
+        onSignup();
+      }
+    });
+  })
+
   function onSignup() {
     var username = document.getElementById('username');  //取得username这个HTML元素，并不是里面的值
     var password = document.getElementById('password');
     var email = document.getElementById('email');
+    var phoneNum = document.getElementById('phoneNum')
     $.ajax({
-      url: "/user/signup",
+      url: "/user/register",
       type: "POST",
       data: {
         "username": username.value,
         "password": password.value,
         "email":email.value,
+        "phone":phoneNum.value
       },
       error: function (err) {
         alert(JSON.stringify(err));
@@ -111,9 +123,9 @@
       success: function (resp) {
         if (resp == "success") {
           alert("注册成功");
-          window.location.href = "/user/signin";
+          window.location.href = "/static/view/home.html"
         } else {
-          alert("注册失败");
+          alert("注册失败, 用户名或电子邮箱或手机号已被注册过!");
         }
       }
     });
